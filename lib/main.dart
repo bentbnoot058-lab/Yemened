@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const AbayaAdenApp());
@@ -380,7 +381,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-// ----------------- شاشة إتمام الطلب والدفع (Checkout Screen) -----------------
+// ----------------- شاشة إتمام الطلب والدفع مع ربط الواتساب (Checkout Screen) -----------------
 class CheckoutScreen extends StatefulWidget {
   final Abaya abaya;
   final String selectedColor;
@@ -478,5 +479,43 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             const Text('الدفع تحويل / إيداع عبر بنوك عدن:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Card(
-              color: selectedBank == 'qutaibi' ? const Color(0xFFF1F8E9) :
-              
+              color: selectedBank == 'qutaibi' ? const Color(0xFFF1F8E9) : Colors.white,
+              child: ListTile(
+                leading: Radio<String>(
+                  value: 'qutaibi',
+                  groupValue: selectedBank,
+                  activeColor: Colors.green[800],
+                  onChanged: (v) => setState(() => selectedBank = v!),
+                ),
+                title: const Text('بنك القطيبي الإسلامي (قطيبي لحظي)'),
+                subtitle: const Text('رقم الحساب: 12345678\nباسم: متجر عبايات عدن'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.copy),
+                  onPressed: () => copyToClipboard('12345678'),
+                ),
+              ),
+            ),
+            Card(
+              color: selectedBank == 'kuraimi' ? const Color(0xFFFFF8E1) : Colors.white,
+              child: ListTile(
+                leading: Radio<String>(
+                  value: 'kuraimi',
+                  groupValue: selectedBank,
+                  activeColor: Colors.amber[800],
+                  onChanged: (v) => setState(() => selectedBank = v!),
+                ),
+                title: const Text('مصرف الكريمي (الحساب الإسلامي)'),
+                subtitle: const Text('رقم الحساب: 98765432\nباسم: متجر عبايات عدن'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.copy),
+                  onPressed: () => copyToClipboard('98765432'),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: refNumberController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'رقم سند التحويل / الحوالة',
+             
